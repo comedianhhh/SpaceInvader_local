@@ -11,7 +11,8 @@ public:
     void update() override;
     void render() override;
 
-    // Add enemy-specific functions as needed
+private:
+
 };
 
-#endif // ENEMYSHIP_H
+#endif

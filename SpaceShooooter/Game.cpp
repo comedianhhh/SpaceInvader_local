@@ -2,36 +2,56 @@
 
 Game::Game() : playerShip(nullptr),window(nullptr), renderer(nullptr)
 {
-    playerShip = new PlayerShip(renderer, 0, 0);
-    //TODO: Initialize SDL
-    //TODO: Create window and renderer
 
 }
 
-Game::~Game() {
-    delete playerShip;
-
-    for (EnemyShip* enemyShip : enemyShips) {
-        delete enemyShip;
-    }
-
-    for (Asteroid* asteroid : asteroids) {
-        delete asteroid;
-    }
-
+Game::~Game() 
+{
+    resetGame();
+	SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
 
 void Game::run() {
-    while (true) {
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            handleInput(event);
+    if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+        SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+        return;
+    }
+
+    window = SDL_CreateWindow("Space Shooter", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
+    if (!window) {
+        SDL_Log("Unable to create window: %s", SDL_GetError());
+        return;
+    }
+
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (!renderer) {
+        SDL_Log("Unable to create renderer: %s", SDL_GetError());
+        return;
+    }
+
+    playerShip = new PlayerShip(renderer,0,0);
+
+    // Game loop
+    bool quit = false;
+    SDL_Event e;
+
+    while (!quit) {
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+
+            handleInput(e);
         }
 
         updateGame();
         render();
 
+        SDL_RenderPresent(renderer);
     }
+    resetGame();
 }
 
 void Game::handleInput(SDL_Event& event) {
@@ -40,7 +60,8 @@ void Game::handleInput(SDL_Event& event) {
         break;
 
     case SDL_KEYDOWN:
-        switch (event.key.keysym.sym) {
+        switch (event.key.keysym.sym) 
+        {
         case SDLK_w:
             playerShip->moveUp();
             break;
@@ -92,10 +113,8 @@ void Game::updateGame() {
 }
 
 void Game::render() {
-
-    SDL_RenderPresent(renderer);
     SDL_RenderClear(renderer);
-
+    SDL_RenderPresent(renderer);
 }
 void Game::spawnEnemyShip() {
  
@@ -114,5 +133,18 @@ void Game::checkCollisions() {
 }
 
 void Game::resetGame() {
-    // reset player and enemy positions, scores, etc.
+
+
+    delete playerShip;
+    playerShip = nullptr;
+
+    for (auto& enemyShip : enemyShips) {
+        delete enemyShip;
+    }
+    enemyShips.clear();
+
+    for (auto& asteroid : asteroids) {
+        delete asteroid;
+    }
+    asteroids.clear();
 }

@@ -3,14 +3,16 @@
 #define RENDER_H
 
 #include <SDL.h>
-#include "GameObject.h"
+#include <SDL_image.h>
+
 
 class Render {
 public:
     Render(SDL_Renderer* renderer);
     ~Render();
 
-    void renderGameObject(GameObject& gameObject);
+    SDL_Texture* loadTexture(const char* path);
+    void renderTexture(SDL_Texture* texture, int x, int y);
 
 private:
     SDL_Renderer* renderer;

@@ -2,17 +2,20 @@
 #include "GameObject.h"
 
 Render::Render(SDL_Renderer* renderer) : renderer(renderer) {
+	IMG_Init(IMG_INIT_PNG);
 }
 
 Render::~Render() {
+	IMG_Quit();
 }
-
-void Render::renderGameObject(GameObject& gameObject) {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-    SDL_RenderClear(renderer);
-
-    gameObject.render();
-
-    SDL_RenderPresent(renderer);
+SDL_Texture* Render::loadTexture(const char* filepath) {
+	SDL_Surface* surface = IMG_Load(filepath);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
+	return texture;
+}
+void Render::renderTexture(SDL_Texture* texture, int x, int y) {
+	SDL_Rect destination = { x, y, 0, 0 }; 
+	SDL_QueryTexture(texture, NULL, NULL, &destination.w, &destination.h);
+	SDL_RenderCopy(renderer, texture, NULL, &destination);
 }
