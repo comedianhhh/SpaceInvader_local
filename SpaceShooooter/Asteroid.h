@@ -1,18 +1,28 @@
 #pragma once
 #ifndef ASTEROID_H
 #define ASTEROID_H
-
-#include "GameObject.h"
-
-class Asteroid : public GameObject {
-public:
-    Asteroid(SDL_Renderer* renderer, int x, int y, int size);
-    void update() override;
-    void render() override;
-
-
+#include <SDL.h>
+#include <SDL_image.h>
+class Asteroid {
 private:
+    int x;
+    int y;
     int size;
+    bool destroyed;
+    SDL_Rect rect;
+public:
+    Asteroid(int initialX, int initialY, int initialSize);
+
+    int GetX() const;
+    int GetY() const;
+    int GetSize() const;
+    bool IsDestroyed() const;
+
+    void Update();
+    void Destroy();
+    bool CheckCollision(const SDL_Rect& otherRect) const;
+    int AwardPoints() const;
+    void Render(SDL_Renderer* renderer);
 };
 
 #endif // ASTEROID_H

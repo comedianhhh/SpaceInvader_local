@@ -3,16 +3,22 @@
 #ifndef ENEMYSHIP_H
 #define ENEMYSHIP_H
 
-#include "GameObject.h"
+#include <SDL.h>
 
-class EnemyShip : public GameObject {
+class EnemyShip{
 public:
-    EnemyShip(SDL_Renderer* renderer, int x, int y);
-    void update() override;
-    void render() override;
+    EnemyShip(SDL_Rect position, int health, int score);
+    virtual ~EnemyShip();
 
-private:
+    virtual void Update();
+    virtual void Render(SDL_Renderer* renderer);
+    virtual void TakeDamage(int amount);
+    virtual void Destroy();
 
+protected:
+    SDL_Rect position;
+    int health;
+    int score;
 };
 
 #endif

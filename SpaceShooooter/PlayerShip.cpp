@@ -1,41 +1,61 @@
 #include "PlayerShip.h"
-#include "Render.h"
-PlayerShip::PlayerShip(SDL_Renderer* renderer, int x, int y) : GameObject(renderer, x, y) {
-    Render rendererInstance(renderer);
-    texture = rendererInstance.loadTexture("assets/Mainplayer/player.png");
-}
 
-void PlayerShip::update() {
+PlayerShip::PlayerShip(SDL_Rect initialPosition, int live)
+    : position(initialPosition), lives(live) {
 
 }
 
-void PlayerShip::render() {
-    Render rendererInstance(renderer);
-    rendererInstance.renderTexture(texture, x, y);
-}
-void PlayerShip::moveUp() {
+PlayerShip::~PlayerShip() {}
+
+void PlayerShip::HandleInput(const Uint8* keyboardState) 
+{
+    int adjustedSpeed = 1;
+
+    if (keyboardState[SDL_SCANCODE_W]) {
+        position.y -= adjustedSpeed;
+    }
+    if (keyboardState[SDL_SCANCODE_S]) {
+        position.y += adjustedSpeed;
+    }
+    if (keyboardState[SDL_SCANCODE_A]) {
+        position.x -= adjustedSpeed;
+    }
+    if (keyboardState[SDL_SCANCODE_D]) {
+        position.x += adjustedSpeed;
+    }
 }
 
-void PlayerShip::moveLeft() {
+void PlayerShip::Update() {
 }
 
-void PlayerShip::moveDown() {
+void PlayerShip::Render(SDL_Renderer* renderer) {
+
+    SDL_Surface* surface = IMG_Load("Asset/Mainplayer/player.png");
+    if (!surface) {
+        // Error handling if the image cannot be loaded
+        SDL_Log("Failed to load image: %s", IMG_GetError());
+        return;
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface); 
+
+    SDL_RenderCopy(renderer, texture, nullptr, &position);
+
+    SDL_DestroyTexture(texture);
+    
+
 }
 
-void PlayerShip::moveRight() {
+void PlayerShip::TakeDamage() {
+    lives--;
 }
 
-void PlayerShip::stopMovingUp() {
+bool PlayerShip::IsDestroyed() const {
+
+    return lives <= 0;
 }
 
-void PlayerShip::stopMovingLeft() {
-}
-
-void PlayerShip::stopMovingDown() {
-}
-
-void PlayerShip::stopMovingRight() {
-}
-
-void PlayerShip::shoot() {
+void PlayerShip::Reset() {
+    lives = 3;
 }

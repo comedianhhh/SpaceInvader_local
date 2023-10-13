@@ -1,16 +1,22 @@
 #include "EnemyShip.h"
-#include"Render.h"
-EnemyShip::EnemyShip(SDL_Renderer* renderer, int x, int y) : GameObject(renderer, x, y) {
-    Render rendererInstance(renderer);
-    texture = rendererInstance.loadTexture("assets/Enemies/enemyShip.png");
+
+EnemyShip::EnemyShip(SDL_Rect position, int health, int score)
+    : position(position), health(health), score(score) {}
+
+EnemyShip::~EnemyShip() {}
+
+void EnemyShip::Update() {
+    // Update enemy's position and behavior
 }
 
-void EnemyShip::update() {
-    // Update enemy ship logic based on AI and game state
+void EnemyShip::Render(SDL_Renderer* renderer) {
+    // Render enemy on the screen using the SDL_Renderer
 }
 
-void EnemyShip::render() {
-    Render rendererInstance(renderer);
-    rendererInstance.renderTexture(texture, x, y);
+void EnemyShip::TakeDamage(int amount) {
+    // Reduce enemy's health
+}
 
+void EnemyShip::Destroy() {
+    // Handle enemy destruction
 }
