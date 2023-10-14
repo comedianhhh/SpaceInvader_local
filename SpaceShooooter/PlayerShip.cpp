@@ -59,3 +59,7 @@ bool PlayerShip::IsDestroyed() const {
 void PlayerShip::Reset() {
     lives = 3;
 }
+SDL_Rect PlayerShip::GetPosition()const
+{
+	return position;
+}

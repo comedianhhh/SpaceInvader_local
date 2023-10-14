@@ -27,12 +27,13 @@ bool Asteroid::IsDestroyed() const {
 
 void Asteroid::Update() {
     if (!destroyed) {
-        x -= 1;
-        rect.x = x;
+        y += 1;
+        rect.y = y;
     }
 }
 
 void Asteroid::Destroy() {
+
     destroyed = true;
 }
 

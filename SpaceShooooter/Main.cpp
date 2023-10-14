@@ -6,9 +6,12 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include"EnemyFactory.h"
+#include "Projectile.h"
 
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
+const int MAX_ASTEROIDS = 6;
 
 int main(int argc, char* argv[]) {
 
@@ -22,8 +25,10 @@ int main(int argc, char* argv[]) {
 
     bool quit = false;
     
-    PlayerShip* playerShip(new PlayerShip({ 100, 100, 50, 50 }, 3));
+    PlayerShip* playerShip(new PlayerShip({ 100, 200, 50, 50 }, 3));
     std::vector<Asteroid*> asteroids;
+    std::vector<Enemy*> enemies;
+
 
     while (!quit) {
         SDL_Event event;
@@ -37,28 +42,98 @@ int main(int argc, char* argv[]) {
                 // Handle other event types as needed
             }
         }
+
+
         // Randomly generate new asteroids
-        if (rand() % 100 < 5) {
-            int size = rand() % 2 == 0 ? 30 : 50; // Randomly select asteroid size
-            int y = rand() % (WINDOW_HEIGHT - size); // Randomly select asteroid position
-            asteroids.push_back(new Asteroid(WINDOW_WIDTH, y, size));
-            //debug 
-            std::cout << "New asteroid created at (" << WINDOW_WIDTH << ", " << y << ") with size " << size << std::endl;
+        if (asteroids.size() < MAX_ASTEROIDS && rand() % 100 < 5) {
+            int size = rand() % 2 == 0 ? 30 : 50; 
+
+            int x = rand() % (WINDOW_WIDTH - size); 
+            int y = -rand()%(WINDOW_HEIGHT-size);
+            bool overlap = false;
+            for (const auto& asteroid : asteroids) {
+                if (abs(asteroid->GetX() - x) < size && abs(asteroid->GetY() - y) < size) {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            if (!overlap) {
+                asteroids.push_back(new Asteroid(x, y, size));
+            }
         }
 
+        // Randomly generate new enemies
+        if (enemies.size() < 5 && rand() % 100 < 5) {
+			int size = rand() % 2 == 0 ? 30 : 50;
+
+			int x = rand() % (WINDOW_WIDTH - size);
+			int y = -rand() % (WINDOW_HEIGHT - size);
+
+            Enemy* enemyShip = EnemyFactory::CreateEnemy(EnemyFactory::EnemyType::SHIP, { x, y, 50, 50 }, 3, 10);
+            enemies.push_back(enemyShip);
+		}
+            
         // Update asteroids
         for (auto& asteroid : asteroids) {
             asteroid->Update();
+            if (asteroid->CheckCollision(playerShip->GetPosition())) {
+				playerShip->TakeDamage();
+				asteroid->Destroy();
+			}
+            if (asteroid->GetY() > WINDOW_HEIGHT)
+            {
+				asteroid->Destroy();
+			}
+
+        }
+        for (auto& enemy : enemies) {
+			enemy->Update();
+            if (enemy->CheckCollision(playerShip->GetPosition())) {
+				playerShip->TakeDamage();
+				enemy->Destroy();
+			}
+            if (enemy->GetY() > WINDOW_HEIGHT)
+            {
+				enemy->Destroy();
+			}
+
+		}
+        for (auto& enemy : enemies)
+        {
+            if (enemy->CheckCollision(playerShip->GetPosition()))
+            {
+				playerShip->TakeDamage();
+				enemy->Destroy();
+			}
         }
 
+
         // Erase destroyed asteroids and deallocate memory
-        asteroids.erase(std::remove_if(asteroids.begin(), asteroids.end(), [](Asteroid* asteroid) {
+        asteroids.erase(std::remove_if(asteroids.begin(), asteroids.end(), [](Asteroid* asteroid) 
+            {
             bool isDestroyed = asteroid->IsDestroyed();
-            if (isDestroyed) {
+            if (isDestroyed) 
+            {
                 delete asteroid;
             }
-            return isDestroyed;
-            }), asteroids.end());
+            return 
+                isDestroyed;
+            }), 
+            asteroids.end());
+
+        // Erase destroyed enemies and deallocate memory
+        enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](Enemy* enemy)
+            {
+			bool isDestroyed = enemy->IsDestroyed();
+            if (isDestroyed)
+            {
+				delete enemy;
+			}
+			return
+				isDestroyed;
+			}),
+            enemies.end());
 
 
 
@@ -83,6 +158,13 @@ int main(int argc, char* argv[]) {
         for (const auto& asteroid : asteroids) {
             asteroid->Render(renderer);
         }
+        for (const auto& enemy : enemies)
+        {
+            enemy->Update();
+            enemy->Render(renderer);
+        }
+
+
         // Update the screen with the rendered content
         SDL_RenderPresent(renderer);
     }

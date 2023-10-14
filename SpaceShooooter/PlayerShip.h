@@ -16,6 +16,7 @@ public:
     void TakeDamage();
     bool IsDestroyed() const;
     void Reset();
+    SDL_Rect GetPosition()const;
 
 private:
     SDL_Rect position;
