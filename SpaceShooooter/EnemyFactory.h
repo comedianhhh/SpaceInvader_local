@@ -5,12 +5,7 @@
 class EnemyFactory
 {
 public:
-	enum EnemyType
-	{
-		UFO,
-		SHIP
-	};
-	static Enemy* CreateEnemy(EnemyType type,SDL_Rect pos,int health,int score);
+	static std::vector<Enemy*> CreateRandomEnemies(int numUFOs, int numShips, int windowWidth, int windowHeight);
 
 };
 

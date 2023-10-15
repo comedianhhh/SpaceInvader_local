@@ -17,13 +17,13 @@ public:
 
     void Destroy();
     SDL_Rect GetPosition() const;
-
+    bool isPlayerProjectile;
+    bool IsOutOfWindow(int windowHeight) const;
 
 private:
     int posX;
     int posY;
     int velocity;
-    bool isPlayerProjectile;
     bool destroyed;
     SDL_Rect rect;
 };

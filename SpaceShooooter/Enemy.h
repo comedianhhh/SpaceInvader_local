@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "Projectile.h"
+#include<vector>
 class Enemy 
 {
 public :
@@ -20,6 +21,7 @@ public :
 	virtual int GetY() const = 0;
 	virtual int GetX() const = 0;
 	virtual bool CheckCollision(const SDL_Rect& otherRect) const = 0;
+
 };
 
 

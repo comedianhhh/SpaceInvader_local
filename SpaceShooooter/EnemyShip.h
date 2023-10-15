@@ -21,7 +21,7 @@ public:
     int GetY() const override;
     int GetX() const override;
     bool CheckCollision(const SDL_Rect& otherRect) const;
-    Projectile* Shoot();
+    void Shoot(std::vector<Projectile*>& projectiles);
  
 
     int shootTimer;
@@ -30,6 +30,7 @@ protected:
     int health;
     int score;
     bool destroyed;
+
 };
 
 #endif

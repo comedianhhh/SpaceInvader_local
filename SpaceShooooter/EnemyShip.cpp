@@ -4,7 +4,7 @@
 EnemyShip::EnemyShip(SDL_Rect position, int health, int score)
     : position(position), health(health), score(score), destroyed(false)
 {
-    shootTimer = 0;
+    shootTimer = 300;
 }
 
 EnemyShip::~EnemyShip() {}
@@ -47,24 +47,27 @@ void EnemyShip::TakeDamage(int amount) {
         Destroy();
     }
 }
-Projectile* EnemyShip::Shoot() {
-	// Return a new projectile
-	return new Projectile(position.x, position.y,2,false);
+void EnemyShip::Shoot(std::vector<Projectile*>& projectiles) 
+{
+    if (shootTimer <= 0) {
+        projectiles.push_back(new Projectile(position.x + 20, position.y + 20, 2, false));
+        shootTimer = 500;
+    }
+    if (shootTimer > 0) {
+        shootTimer--;
+    }
 }
 
 void EnemyShip::Destroy() {
-    // Handle enemy destruction
+    destroyed =true;
 }
 bool EnemyShip::IsDestroyed() const {
-	// Return true if enemy is destroyed
-	return health <= 0;
+	return destroyed;
 }
 int EnemyShip::AwardPoints() const {
-	// Return the points awarded for destroying this enemy
 	return score;
 }
 SDL_Rect EnemyShip::GetPosition() const {
-	// Return the enemy's position
 	return position;
 }
 int EnemyShip::GetHealth() const {

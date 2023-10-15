@@ -14,7 +14,8 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 const int MAX_ASTEROIDS = 6;
-
+const int MAX_ENEMIES = 3;
+int spawnTimer = 1000;
 int main(int argc, char* argv[]) {
 
     SDL_Window* window = nullptr;
@@ -27,7 +28,7 @@ int main(int argc, char* argv[]) {
 
     bool quit = false;
     
-    PlayerShip* playerShip(new PlayerShip({ 100, 200, 50, 50 }, 3));
+    PlayerShip* playerShip(new PlayerShip({ 100, 200, 50, 50 }, 3,0));
     std::vector<Asteroid*> asteroids;
     std::vector<Enemy*> enemies;
     std::vector<Projectile*> projectiles;
@@ -48,10 +49,10 @@ int main(int argc, char* argv[]) {
 
         // Randomly generate new asteroids
         if (asteroids.size() < MAX_ASTEROIDS && rand() % 100 < 5) {
-            int size = rand() % 2 == 0 ? 30 : 50; 
+            int size = rand() % 2 == 0 ? 30 : 50;
 
-            int x = rand() % (WINDOW_WIDTH - size); 
-            int y = -rand()%(WINDOW_HEIGHT-size);
+            int x = rand() % (WINDOW_WIDTH - size);
+            int y = -rand() % (WINDOW_HEIGHT - size);
             bool overlap = false;
             for (const auto& asteroid : asteroids) {
                 if (abs(asteroid->GetX() - x) < size && abs(asteroid->GetY() - y) < size) {
@@ -66,79 +67,78 @@ int main(int argc, char* argv[]) {
         }
 
         // Randomly generate new enemies
-        if (enemies.size() < 5 && rand() % 100 < 5) {
-			int size = rand() % 2 == 0 ? 30 : 50;
+        if (spawnTimer<=0) {
+            if (enemies.size() < MAX_ENEMIES && rand() % 100 < 5) {
+                int numUFOs = rand() % 2 == 0 ? 1 :3;
+                int numShips = rand() % 2 == 0 ? 1 : 3;
+                std::vector<Enemy*> newEnemies = EnemyFactory::CreateRandomEnemies(numUFOs, numShips, WINDOW_WIDTH, WINDOW_HEIGHT);
+                enemies.insert(enemies.end(), newEnemies.begin(), newEnemies.end());
+                spawnTimer=100;
+            }
+        }
+        else {
+            spawnTimer--;
+        }
 
-			int x = rand() % (WINDOW_WIDTH - size);
-			int y = -rand() % (WINDOW_HEIGHT - size);
-
-            Enemy* enemyShip = EnemyFactory::CreateEnemy(EnemyFactory::EnemyType::SHIP, { x, y, 50, 50 }, 3, 10);
-            enemies.push_back(enemyShip);
-            
-		}
-            
         // Update asteroids
         for (auto& asteroid : asteroids) {
             asteroid->Update();
             if (asteroid->CheckCollision(playerShip->GetPosition())) {
-				playerShip->TakeDamage();
-				asteroid->Destroy();
-			}
+                playerShip->TakeDamage();
+                asteroid->Destroy();
+            }
             if (asteroid->GetY() > WINDOW_HEIGHT)
             {
-				asteroid->Destroy();
-			}
+                asteroid->Destroy();
+            }
 
         }
         for (auto& enemy : enemies) {
-			enemy->Update();
+            enemy->Update();
             if (enemy->CheckCollision(playerShip->GetPosition())) {
-				playerShip->TakeDamage();
-				enemy->Destroy();
-			}
+                playerShip->TakeDamage();
+                enemy->Destroy();
+            }
             if (enemy->GetY() > WINDOW_HEIGHT)
             {
-				enemy->Destroy();
-			}
+                enemy->Destroy();
+            }
             if (enemy->CheckCollision(playerShip->GetPosition()))
             {
-				playerShip->TakeDamage();
-				enemy->Destroy();
-			}
-            if(enemy->GetHealth() <= 0)
-			{
-				enemy->Destroy();
-			}
-            if (auto* ship = dynamic_cast<EnemyShip*>(enemy)) 
-            {
-                if(ship->shootTimer >= 100)
-				{
-
-					projectiles.push_back(ship->Shoot());
-					ship->shootTimer = 0;
-
-				}
-				else
-				{
-					ship->shootTimer++;
-				}
-                
+                playerShip->TakeDamage();
+                enemy->Destroy();
             }
-            else if (auto* ufo = dynamic_cast<EnemyUFO*>(enemy)) 
+            if (enemy->GetHealth() <= 0)
             {
-              
+                enemy->Destroy();
             }
-		}
+            if (auto* ship = dynamic_cast<EnemyShip*>(enemy))
+            {
+                ship->Shoot(projectiles);
+            }
+            else if (auto* ufo = dynamic_cast<EnemyUFO*>(enemy))
+            {
+
+            }
+        }
         for (auto& projectile : projectiles)
         {
             projectile->Update();
-            if (projectile->CheckCollision(playerShip->GetPosition()))
-			{
-				playerShip->TakeDamage();
-				projectile->Destroy();
-			}
-            if (projectile->GetY() > WINDOW_HEIGHT)
+            if (projectile->CheckCollision(playerShip->GetPosition()) && !projectile->isPlayerProjectile)
             {
+                playerShip->TakeDamage();
+                projectile->Destroy();
+            }
+            for(auto&enemy : enemies)
+			{
+				if (projectile->CheckCollision(enemy->GetPosition()) && projectile->isPlayerProjectile)
+				{
+					enemy->Destroy();
+					projectile->Destroy();
+				}
+			}
+            
+            if (projectile->IsOutOfWindow(WINDOW_HEIGHT)) {
                 projectile->Destroy();
             }
         }
@@ -168,23 +168,28 @@ int main(int argc, char* argv[]) {
 			}),
             enemies.end());
 
+        // Erase destroyed projectiles and deallocate memory
+        std::cout << "Number of projectiles before erase: " << projectiles.size() << std::endl;
+
+        // Erase destroyed projectiles and deallocate memory
         projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](Projectile* projectile)
-			{
-			bool isDestroyed = projectile->IsDestroyed();
-			if (isDestroyed)
-			{
-				delete projectile;
-			}
-			return
-				isDestroyed;
-			}),
-			projectiles.end());
+            {
+                bool isDestroyed = projectile->IsDestroyed();
+                if (isDestroyed)
+                {
+                    delete projectile;
+                }
+                return isDestroyed;
+            }),
+            projectiles.end());
+
+        std::cout << "Number of projectiles after erase: " << projectiles.size() << std::endl;
 
 
 
-
+        std::cout<<projectiles.size()<<std::endl;
         const Uint8* keyboardState = SDL_GetKeyboardState(nullptr);
-        playerShip->HandleInput(keyboardState);
+        playerShip->HandleInput(keyboardState, projectiles);
 
 
         playerShip->Update();

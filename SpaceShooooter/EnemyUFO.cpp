@@ -1,5 +1,5 @@
 #include "EnemyUFO.h"
-
+bool moveright = true;
 EnemyUFO::EnemyUFO(SDL_Rect position, int health, int score)
 	: position(position), health(health), score(score), destroyed(false){}
 
@@ -8,10 +8,23 @@ EnemyUFO::~EnemyUFO()
 }
 void EnemyUFO::Update()
 {
+
 	if (!destroyed) 
 	{
-		position.y += 1;
+		if (moveright) {
+			position.x += 1;
+		}
+		else {
+			position.x -= 1;
+		}
 
+		if (position.x > 750 && moveright) {
+			moveright = false;
+		}
+		if (position.x < 50) {
+			moveright = true;
+		}
+		position.y += 1;
 	}
 }
 void EnemyUFO::Render(SDL_Renderer* renderer)
@@ -41,7 +54,7 @@ void EnemyUFO::TakeDamage(int amount)
 }
 void EnemyUFO::Destroy()
 {
-	// Handle enemy destruction
+	destroyed= true;
 }
 int EnemyUFO::AwardPoints() const
 {
@@ -49,7 +62,7 @@ int EnemyUFO::AwardPoints() const
 }
 bool EnemyUFO::IsDestroyed() const
 {
-	return health <= 0;
+	return destroyed;
 }
 SDL_Rect EnemyUFO::GetPosition() const
 {

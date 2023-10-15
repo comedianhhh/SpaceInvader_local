@@ -7,12 +7,20 @@ Projectile::Projectile(int x, int y, int velocity, bool isPlayerProjectile) :pos
 	rect.y = posY;
 	rect.w = 9;
 	rect.h = 54;
+
 }
         
 
 void Projectile::Update()
 {
-   rect.y += velocity;
+	if (isPlayerProjectile) {
+		rect.y -= velocity;
+	}
+	else if (!isPlayerProjectile) {
+		rect.y += velocity;
+	}
+
+
 }
 
 void Projectile::Render(SDL_Renderer* renderer)
@@ -49,9 +57,15 @@ bool Projectile::CheckCollision(const SDL_Rect& otherRect) const {
     }
     return false;
 }
+bool Projectile::IsOutOfWindow(int windowHeight) const 
+{
+
+	return rect.y > windowHeight || rect.y < 0;
+}
 void Projectile::Destroy() 
 {
     destroyed = true;
+	std::cout<<"Projectile destroyed"<<std::endl;
 }
 bool Projectile::IsDestroyed() const {
 	return destroyed;
