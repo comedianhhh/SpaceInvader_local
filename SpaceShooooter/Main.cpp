@@ -10,7 +10,7 @@
 #include "Projectile.h"
 #include "EnemyShip.h"
 #include "EnemyUFO.h"
-
+#include "BackGround.h"
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 const int MAX_ASTEROIDS = 6;
@@ -22,18 +22,20 @@ int main(int argc, char* argv[]) {
     SDL_Renderer* renderer = nullptr;
     window = SDL_CreateWindow("SDL Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    BackGround background(renderer);
 
     // Seed the random number generator
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     bool quit = false;
-    
+
     PlayerShip* playerShip(new PlayerShip({ 100, 200, 50, 50 }, 3,0));
     std::vector<Asteroid*> asteroids;
     std::vector<Enemy*> enemies;
     std::vector<Projectile*> projectiles;
 
-    while (!quit) {
+    while (!quit) 
+    {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -169,7 +171,6 @@ int main(int argc, char* argv[]) {
             enemies.end());
 
         // Erase destroyed projectiles and deallocate memory
-        std::cout << "Number of projectiles before erase: " << projectiles.size() << std::endl;
 
         // Erase destroyed projectiles and deallocate memory
         projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](Projectile* projectile)
@@ -183,11 +184,9 @@ int main(int argc, char* argv[]) {
             }),
             projectiles.end());
 
-        std::cout << "Number of projectiles after erase: " << projectiles.size() << std::endl;
 
 
 
-        std::cout<<projectiles.size()<<std::endl;
         const Uint8* keyboardState = SDL_GetKeyboardState(nullptr);
         playerShip->HandleInput(keyboardState, projectiles);
 
@@ -200,8 +199,18 @@ int main(int argc, char* argv[]) {
         }
 
         // Clear the screen
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+ 
         SDL_RenderClear(renderer);
+        if (rand() % 100 < 5) {
+            background.AddStar();
+        }
+
+        if (rand() % 100 < 2) {
+            background.AddCloud();
+        }
+        background.MoveObjects();
+        background.Render();
+
 
         // Render player ship
         playerShip->Render(renderer);
@@ -217,7 +226,6 @@ int main(int argc, char* argv[]) {
 			projectile->Render(renderer);
 		}
 
-
         // Update the screen with the rendered content
         SDL_RenderPresent(renderer);
     }
@@ -231,3 +239,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+

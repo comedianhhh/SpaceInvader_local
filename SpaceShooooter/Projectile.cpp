@@ -65,7 +65,6 @@ bool Projectile::IsOutOfWindow(int windowHeight) const
 void Projectile::Destroy() 
 {
     destroyed = true;
-	std::cout<<"Projectile destroyed"<<std::endl;
 }
 bool Projectile::IsDestroyed() const {
 	return destroyed;
