@@ -75,12 +75,5 @@ bool EnemyUFO::CheckCollision(const SDL_Rect& otherRect) const
 {
 	return SDL_HasIntersection(&position, &otherRect);
 }
-bool EnemyUFO::ShouldShoot() const
-{
-	return false;
-}
-Projectile* EnemyUFO::Shoot()
-{
-	return nullptr;
-}
+
 

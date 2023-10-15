@@ -8,6 +8,8 @@
 #include <vector>
 #include"EnemyFactory.h"
 #include "Projectile.h"
+#include "EnemyShip.h"
+#include "EnemyUFO.h"
 
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
@@ -28,7 +30,7 @@ int main(int argc, char* argv[]) {
     PlayerShip* playerShip(new PlayerShip({ 100, 200, 50, 50 }, 3));
     std::vector<Asteroid*> asteroids;
     std::vector<Enemy*> enemies;
-
+    std::vector<Projectile*> projectiles;
 
     while (!quit) {
         SDL_Event event;
@@ -72,6 +74,7 @@ int main(int argc, char* argv[]) {
 
             Enemy* enemyShip = EnemyFactory::CreateEnemy(EnemyFactory::EnemyType::SHIP, { x, y, 50, 50 }, 3, 10);
             enemies.push_back(enemyShip);
+            
 		}
             
         // Update asteroids
@@ -97,18 +100,48 @@ int main(int argc, char* argv[]) {
             {
 				enemy->Destroy();
 			}
-
-		}
-        for (auto& enemy : enemies)
-        {
             if (enemy->CheckCollision(playerShip->GetPosition()))
             {
 				playerShip->TakeDamage();
 				enemy->Destroy();
 			}
+            if(enemy->GetHealth() <= 0)
+			{
+				enemy->Destroy();
+			}
+            if (auto* ship = dynamic_cast<EnemyShip*>(enemy)) 
+            {
+                if(ship->shootTimer >= 100)
+				{
+
+					projectiles.push_back(ship->Shoot());
+					ship->shootTimer = 0;
+
+				}
+				else
+				{
+					ship->shootTimer++;
+				}
+                
+            }
+            else if (auto* ufo = dynamic_cast<EnemyUFO*>(enemy)) 
+            {
+              
+            }
+		}
+        for (auto& projectile : projectiles)
+        {
+            projectile->Update();
+            if (projectile->CheckCollision(playerShip->GetPosition()))
+			{
+				playerShip->TakeDamage();
+				projectile->Destroy();
+			}
+            if (projectile->GetY() > WINDOW_HEIGHT)
+            {
+                projectile->Destroy();
+            }
         }
-
-
         // Erase destroyed asteroids and deallocate memory
         asteroids.erase(std::remove_if(asteroids.begin(), asteroids.end(), [](Asteroid* asteroid) 
             {
@@ -135,6 +168,18 @@ int main(int argc, char* argv[]) {
 			}),
             enemies.end());
 
+        projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](Projectile* projectile)
+			{
+			bool isDestroyed = projectile->IsDestroyed();
+			if (isDestroyed)
+			{
+				delete projectile;
+			}
+			return
+				isDestroyed;
+			}),
+			projectiles.end());
+
 
 
 
@@ -160,9 +205,12 @@ int main(int argc, char* argv[]) {
         }
         for (const auto& enemy : enemies)
         {
-            enemy->Update();
             enemy->Render(renderer);
         }
+        for(auto& projectile : projectiles)
+		{
+			projectile->Render(renderer);
+		}
 
 
         // Update the screen with the rendered content

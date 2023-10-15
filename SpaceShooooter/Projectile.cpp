@@ -1,5 +1,5 @@
 #include "Projectile.h"
-
+#include <iostream>
 
 Projectile::Projectile(int x, int y, int velocity, bool isPlayerProjectile) :posX(x), posY(y), velocity(velocity), isPlayerProjectile(isPlayerProjectile), destroyed(false)
 {
@@ -12,7 +12,7 @@ Projectile::Projectile(int x, int y, int velocity, bool isPlayerProjectile) :pos
 
 void Projectile::Update()
 {
-    posY += velocity;
+   rect.y += velocity;
 }
 
 void Projectile::Render(SDL_Renderer* renderer)
@@ -58,4 +58,7 @@ bool Projectile::IsDestroyed() const {
 }
 SDL_Rect Projectile::GetPosition() const {
 	return rect;
+}
+int Projectile::GetY() const {
+	return posY;
 }

@@ -2,7 +2,10 @@
 #include <cstdlib>
 
 EnemyShip::EnemyShip(SDL_Rect position, int health, int score)
-    : position(position), health(health), score(score), destroyed(false) {}
+    : position(position), health(health), score(score), destroyed(false)
+{
+    shootTimer = 0;
+}
 
 EnemyShip::~EnemyShip() {}
 
@@ -44,11 +47,10 @@ void EnemyShip::TakeDamage(int amount) {
         Destroy();
     }
 }
-int EnemyShip::SpawnProjectile() 
-{
-    return 3;
+Projectile* EnemyShip::Shoot() {
+	// Return a new projectile
+	return new Projectile(position.x, position.y,2,false);
 }
-
 
 void EnemyShip::Destroy() {
     // Handle enemy destruction
@@ -79,7 +81,4 @@ int EnemyShip::GetX() const {
 }
 bool EnemyShip::CheckCollision(const SDL_Rect& otherRect) const {
 	return SDL_HasIntersection(&position, &otherRect);
-}
-bool EnemyShip::ShouldShoot() const {
-	return rand() % 5 == 0;
 }
