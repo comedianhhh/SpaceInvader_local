@@ -2,7 +2,7 @@
   "PlayerShip": {
     "lives": 3,
     "damage": 2,
-    "shootTimer": 1000,
+    "shootTimer": 100,
     "texture": "Asset/Mainplayer/playerDamaged.png"
   }
 }

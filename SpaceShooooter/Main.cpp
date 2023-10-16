@@ -145,7 +145,7 @@ int main(int argc, char* argv[]) {
 			{
 				if (projectile->CheckCollision(enemy->GetPosition()) && projectile->isPlayerProjectile)
 				{
-					enemy->TakeDamage(2);
+					enemy->TakeDamage(playerShip->GetDamage());
 					projectile->Destroy();
                     playerShip->AddScore(enemy->AwardPoints());
 				}

@@ -16,6 +16,7 @@ void PlayerShip::HandleInput(const Uint8* keyboardState, std::vector<Projectile*
 
     if (keyboardState[SDL_SCANCODE_W]) {
         position.y -= adjustedSpeed;
+
     }
     if (keyboardState[SDL_SCANCODE_S]) {
         position.y += adjustedSpeed;
@@ -26,12 +27,12 @@ void PlayerShip::HandleInput(const Uint8* keyboardState, std::vector<Projectile*
     if (keyboardState[SDL_SCANCODE_D]) {
         position.x += adjustedSpeed;
     }
-    if(keyboardState[SDL_SCANCODE_SPACE]&&shootTimer<=0) {
+    if(keyboardState[SDL_SCANCODE_SPACE]&& timer <=0) {
         projectiles.push_back(Shoot());
-        shootTimer = 100;
+        timer = shootTimer;
 	}
-    if (shootTimer > 0) {
-		shootTimer--;
+    if (timer > 0) {
+        timer--;
 	}
 }
 
@@ -87,6 +88,10 @@ int PlayerShip::GetLives() const
 int PlayerShip::GetScore() const
 {
 	return score;
+}
+int PlayerShip::GetDamage() const
+{
+	return damage;
 }
 void PlayerShip::LoadData() 
 {

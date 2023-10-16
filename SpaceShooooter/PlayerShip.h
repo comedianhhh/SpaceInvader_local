@@ -22,6 +22,7 @@ public:
     void Reset();
     int GetLives() const;
     int GetScore() const;
+    int GetDamage() const;
     SDL_Rect GetPosition()const;
     Projectile* Shoot();
     void AddScore(int score);
@@ -34,6 +35,7 @@ private:
     int lives;
     int shootTimer;
     int score;
+    int timer;
     std::string filepath;
     SDL_Texture* texture;
 };
