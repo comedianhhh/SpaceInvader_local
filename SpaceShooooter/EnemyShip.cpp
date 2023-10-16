@@ -4,7 +4,8 @@
 EnemyShip::EnemyShip(SDL_Rect position, int health, int score)
     : position(position), health(health), score(score), destroyed(false)
 {
-    shootTimer = 300;
+    timer = shootTimer;
+    filepath= "Asset/Enemies/enemyShip.png";
 }
 
 EnemyShip::~EnemyShip() {}
@@ -20,14 +21,9 @@ void EnemyShip::Update() {
     }
 }
 
-void EnemyShip::Render(SDL_Renderer* renderer) {
-    SDL_Surface* surface = IMG_Load("Asset/Enemies/enemyShip.png");
-    if (!surface) {
-        // Error handling if the image cannot be loaded
-        SDL_Log("Failed to load image: %s", IMG_GetError());
-        return;
-    }
-
+void EnemyShip::Render(SDL_Renderer* renderer)
+{
+    SDL_Surface* surface = IMG_Load(filepath.c_str());
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
 
@@ -48,12 +44,12 @@ void EnemyShip::TakeDamage(int amount) {
 }
 void EnemyShip::Shoot(std::vector<Projectile*>& projectiles) 
 {
-    if (shootTimer <= 0) {
+    if (timer <= 0) {
         projectiles.push_back(new Projectile(position.x + 20, position.y + 20, 2, false));
-        shootTimer = 500;
+        timer = shootTimer;
     }
-    if (shootTimer > 0) {
-        shootTimer--;
+    if (timer > 0) {
+        timer--;
     }
 }
 
@@ -100,5 +96,13 @@ void EnemyShip::LoadData()
 		{
 			score = enemyShip["score"].ToInt();
 		}
+        if (enemyShip.hasKey("shootTimer")) 
+        {
+            shootTimer = enemyShip["shootTimer"].ToInt();
+        }
+        if (enemyShip.hasKey("texture")) 
+        {
+            filepath= enemyShip["texture"].ToString();
+        }
 	}
 }

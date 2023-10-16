@@ -156,6 +156,8 @@
     <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="EnemyShip.cpp" />
     <ClCompile Include="EnemyUFO.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameUI.cpp" />
     <ClCompile Include="json.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -169,6 +171,8 @@
     <ClInclude Include="EnemyFactory.h" />
     <ClInclude Include="EnemyShip.h" />
     <ClInclude Include="EnemyUFO.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameUI.h" />
     <ClInclude Include="json.hpp" />
     <ClInclude Include="PlayerShip.h" />

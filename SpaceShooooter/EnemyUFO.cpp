@@ -1,7 +1,10 @@
 #include "EnemyUFO.h"
 bool moveright = true;
 EnemyUFO::EnemyUFO(SDL_Rect position, int health, int score)
-	: position(position), health(health), score(score), destroyed(false){}
+	: position(position), health(health), score(score), destroyed(false)
+{
+	filepath = "Asset/Enemies/enemyUFO.png";
+}
 
 EnemyUFO::~EnemyUFO()
 {
@@ -29,12 +32,7 @@ void EnemyUFO::Update()
 }
 void EnemyUFO::Render(SDL_Renderer* renderer)
 {
-	SDL_Surface* surface = IMG_Load("Asset/Enemies/enemyUFO.png");
-	if (!surface) {
-		// Error handling if the image cannot be loaded
-		SDL_Log("Failed to load image: %s", IMG_GetError());
-		return;
-	}
+	SDL_Surface* surface = IMG_Load(filepath.c_str());
 
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_FreeSurface(surface);
@@ -104,6 +102,10 @@ void EnemyUFO::LoadData()
 		if (enemyUFO.hasKey("score"))
 		{
 			score = enemyUFO["score"].ToInt();
+		}
+		if(enemyUFO.hasKey("texture"))
+		{
+			filepath = enemyUFO["texture"].ToString();
 		}
 	}
 

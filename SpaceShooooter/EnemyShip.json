@@ -1,7 +1,8 @@
 {
-  "EnemyShip":
-  {
+  "EnemyShip": {
     "health": 1,
-    "score": 50
+    "score": 50,
+    "shootTimer": 400,
+    "texture": "Asset/Enemies/Converter.png"
   }
 }

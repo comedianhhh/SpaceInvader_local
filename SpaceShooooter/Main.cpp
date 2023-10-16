@@ -72,7 +72,6 @@ int main(int argc, char* argv[]) {
                     break;
                 }
             }
-
             if (!overlap) {
                 asteroids.push_back(new Asteroid(x, y, size));
             }

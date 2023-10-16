@@ -23,13 +23,16 @@ public:
     bool CheckCollision(const SDL_Rect& otherRect) const;
     void Shoot(std::vector<Projectile*>& projectiles);
  
-    int shootTimer;
     void LoadData() override;
 protected:
     SDL_Rect position;
+    int shootTimer;
     int health;
     int score;
     bool destroyed;
+    int timer;
+    std::string filepath;
+    SDL_Texture* texture;
 
 };
 

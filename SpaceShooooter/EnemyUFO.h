@@ -27,6 +27,8 @@ protected:
     int health;
     int score;
     bool destroyed;
+    std::string filepath;
+    SDL_Texture* texture;
 };
 
 #endif // !_ENEMYUFO_H

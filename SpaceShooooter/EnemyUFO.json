@@ -1,7 +1,7 @@
 {
-  "EnemyUFO": 
-  {
+  "EnemyUFO": {
     "health": 3,
-    "score": 200
+    "score": 200,
+    "texture": "Asset/Enemies/enemyUFO.png"
   }
 }
