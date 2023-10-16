@@ -20,6 +20,7 @@ public:
     int GetY() const override;
     int GetX() const override;
     bool CheckCollision(const SDL_Rect& otherRect) const;
+    void LoadData() override;
 
 protected:
     SDL_Rect position;

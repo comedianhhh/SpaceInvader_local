@@ -25,7 +25,9 @@ std::vector<Enemy*> EnemyFactory::CreateRandomEnemies(int numUFOs, int numShips,
                 break; 
             }
         }
-        enemies.push_back(new EnemyUFO({ x, y, 50, 50 }, 3, 10));
+        EnemyUFO* ufo = new EnemyUFO({ x, y, 50, 50 }, 3, 10);
+        ufo->LoadData();
+        enemies.push_back(ufo);
     }
 
     for (int i = 0; i < numShips; ++i) {
@@ -44,7 +46,9 @@ std::vector<Enemy*> EnemyFactory::CreateRandomEnemies(int numUFOs, int numShips,
                 break;
             }
         }
-        enemies.push_back(new EnemyShip({ x, y, 50, 50 }, 3, 10));
+        EnemyShip* ship = new EnemyShip({ x, y, 50, 50 }, 5, 10);
+        ship->LoadData();
+        enemies.push_back(ship);
     }
 
 

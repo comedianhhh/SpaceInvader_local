@@ -6,10 +6,12 @@
 #include <SDL_image.h>
 #include <iostream>
 #include "Projectile.h"
+#include"json.hpp"
 #include<vector>
+#include<fstream>
 class PlayerShip {
 public:
-    PlayerShip(SDL_Rect initialPosition, int initialLives,int shootTimer);
+    PlayerShip(SDL_Rect initialPosition, int initialLives,int shootTimer,int score);
     ~PlayerShip();
 
     void HandleInput(const Uint8* keyboardState,std::vector<Projectile*>& projectiles);
@@ -19,14 +21,21 @@ public:
     bool IsDestroyed() const;
     void Reset();
     int GetLives() const;
+    int GetScore() const;
     SDL_Rect GetPosition()const;
     Projectile* Shoot();
+    void AddScore(int score);
+    void LoadData();
 
 private:
+    
     SDL_Rect position;
+    int damage;
     int lives;
     int shootTimer;
-    
+    int score;
+    std::string filepath;
+    SDL_Texture* texture;
 };
 
 #endif // PLAYERSHIP_H

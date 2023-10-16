@@ -88,5 +88,26 @@ bool EnemyUFO::CheckCollision(const SDL_Rect& otherRect) const
 {
 	return SDL_HasIntersection(&position, &otherRect);
 }
+void EnemyUFO::LoadData()
+{
+	std::ifstream inputStream("EnemyUFO.json");
+	std::string str((std::istreambuf_iterator<char>(inputStream)), std::istreambuf_iterator<char>());
+	json::JSON document = json::JSON::Load(str);
+	if (document.hasKey("EnemyUFO"))
+	{
+		json::JSON enemyUFO = document["EnemyUFO"];
+		if (enemyUFO.hasKey("health"))
+		{
+			health = enemyUFO["health"].ToInt();
+		}
+
+		if (enemyUFO.hasKey("score"))
+		{
+			score = enemyUFO["score"].ToInt();
+		}
+	}
+
+	inputStream.close();
+}
 
 

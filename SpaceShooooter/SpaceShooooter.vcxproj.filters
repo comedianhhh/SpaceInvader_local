@@ -39,10 +39,10 @@
     <ClCompile Include="BackGround.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\simpleJSON\json.cpp">
+    <ClCompile Include="GameUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameUI.cpp">
+    <ClCompile Include="json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,10 +71,10 @@
     <ClInclude Include="BackGround.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\simpleJSON\json.hpp">
+    <ClInclude Include="GameUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameUI.h">
+    <ClInclude Include="json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

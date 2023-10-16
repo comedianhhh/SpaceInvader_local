@@ -24,17 +24,26 @@ int main(int argc, char* argv[]) {
     window = SDL_CreateWindow("SDL Example", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     BackGround background(renderer);
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        // Handle SDL initialization error
+    }
 
+    if (TTF_Init() < 0) {
+        // Handle SDL_ttf initialization error
+    }
+    TTF_Font* font = TTF_OpenFont("Asset/Hud/courbi.ttf", 24);
     // Seed the random number generator
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     bool quit = false;
 
-    PlayerShip* playerShip(new PlayerShip({ 100, 200, 50, 50 }, 3,0));
+    PlayerShip* playerShip(new PlayerShip({ 100, 200, 50, 50 }, 10,0,0));
+
     std::vector<Asteroid*> asteroids;
     std::vector<Enemy*> enemies;
     std::vector<Projectile*> projectiles;
 
+    playerShip->LoadData();
     while (!quit) 
     {
         SDL_Event event;
@@ -136,11 +145,21 @@ int main(int argc, char* argv[]) {
 			{
 				if (projectile->CheckCollision(enemy->GetPosition()) && projectile->isPlayerProjectile)
 				{
-					enemy->Destroy();
+					enemy->TakeDamage(2);
 					projectile->Destroy();
+                    playerShip->AddScore(enemy->AwardPoints());
 				}
 			}
-            
+            for (auto& asteroid : asteroids) 
+            {
+                if (projectile->CheckCollision(asteroid->GetPosition()) && projectile->isPlayerProjectile)
+                {
+					asteroid->Destroy();
+					projectile->Destroy();
+                    playerShip->AddScore(asteroid->AwardPoints());
+				}
+            }
+ 
             if (projectile->IsOutOfWindow(WINDOW_HEIGHT)) {
                 projectile->Destroy();
             }
@@ -152,6 +171,7 @@ int main(int argc, char* argv[]) {
             if (isDestroyed) 
             {
                 delete asteroid;
+                asteroid = nullptr;
             }
             return 
                 isDestroyed;
@@ -165,13 +185,12 @@ int main(int argc, char* argv[]) {
             if (isDestroyed)
             {
 				delete enemy;
+                enemy=nullptr;
 			}
 			return
 				isDestroyed;
 			}),
             enemies.end());
-
-        // Erase destroyed projectiles and deallocate memory
 
         // Erase destroyed projectiles and deallocate memory
         projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](Projectile* projectile)
@@ -180,13 +199,11 @@ int main(int argc, char* argv[]) {
                 if (isDestroyed)
                 {
                     delete projectile;
+                    projectile = nullptr;
                 }
                 return isDestroyed;
             }),
             projectiles.end());
-
-
-
 
         const Uint8* keyboardState = SDL_GetKeyboardState(nullptr);
         playerShip->HandleInput(keyboardState, projectiles);
@@ -212,13 +229,13 @@ int main(int argc, char* argv[]) {
         background.MoveObjects();
         background.Render();
         // Render game UI
-        GameUI::GetInstance().Render(renderer);
-
-        GameUI::GetInstance().IncreaseScore(1);
+        
         GameUI::GetInstance().SetLives(playerShip->GetLives());
+        GameUI::GetInstance().SetScore(playerShip->GetScore());
         GameUI::GetInstance().Render(renderer);
 
         // Render player ship
+        
         playerShip->Render(renderer);
         for (const auto& asteroid : asteroids) {
             asteroid->Render(renderer);
@@ -238,8 +255,9 @@ int main(int argc, char* argv[]) {
 
     // Cleanup and shutdown SDL
 
-
     delete playerShip;
+    TTF_Quit();
+    SDL_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

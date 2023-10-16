@@ -151,19 +151,18 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\simpleJSON\json.cpp" />
     <ClCompile Include="Asteroid.cpp" />
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="EnemyFactory.cpp" />
     <ClCompile Include="EnemyShip.cpp" />
     <ClCompile Include="EnemyUFO.cpp" />
     <ClCompile Include="GameUI.cpp" />
+    <ClCompile Include="json.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PlayerShip.cpp" />
     <ClCompile Include="Projectile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\simpleJSON\json.hpp" />
     <ClInclude Include="Asteroid.h" />
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="Enemy.h" />
@@ -171,6 +170,7 @@
     <ClInclude Include="EnemyShip.h" />
     <ClInclude Include="EnemyUFO.h" />
     <ClInclude Include="GameUI.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="PlayerShip.h" />
     <ClInclude Include="Projectile.h" />
   </ItemGroup>

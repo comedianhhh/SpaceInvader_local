@@ -55,6 +55,9 @@ int Asteroid::AwardPoints() const {
         return 3;
     }
 }
+SDL_Rect Asteroid::GetPosition() const {
+	return rect;
+}
 void Asteroid::Render(SDL_Renderer* renderer) {
     SDL_Surface* surface = IMG_Load("Asset/Asteroids/meteorBig.png");
     if (!surface) {

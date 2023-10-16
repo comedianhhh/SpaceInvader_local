@@ -15,7 +15,6 @@ void EnemyShip::Update() {
     if (!destroyed) {
 		if (position.y < 100)
 		{
-	
 			position.y +=1;
 		}
     }
@@ -84,4 +83,22 @@ int EnemyShip::GetX() const {
 }
 bool EnemyShip::CheckCollision(const SDL_Rect& otherRect) const {
 	return SDL_HasIntersection(&position, &otherRect);
+}
+void EnemyShip::LoadData() 
+{
+    std::ifstream inputStream("EnemyShip.json");
+    std::string str((std::istreambuf_iterator<char>(inputStream)), std::istreambuf_iterator<char>());
+    json::JSON document = json::JSON::Load(str);
+    if(document.hasKey("EnemyShip"))
+	{
+		json::JSON enemyShip = document["EnemyShip"];
+		if(enemyShip.hasKey("health"))
+		{
+			health = enemyShip["health"].ToInt();
+		}
+		if(enemyShip.hasKey("score"))
+		{
+			score = enemyShip["score"].ToInt();
+		}
+	}
 }

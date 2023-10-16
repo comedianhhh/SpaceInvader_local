@@ -26,7 +26,7 @@ public:
 		}
 	}
 	void SetLives(int lives);
-	void IncreaseScore(int score);
+	void SetScore(int score);
 	void Render(SDL_Renderer* renderer);
 	void RenderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, int x, int y);
 

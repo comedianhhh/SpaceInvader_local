@@ -15,6 +15,7 @@ public:
 
     int GetX() const;
     int GetY() const;
+    SDL_Rect GetPosition() const;
     int GetSize() const;
     bool IsDestroyed() const;
 

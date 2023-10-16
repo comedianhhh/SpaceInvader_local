@@ -1,0 +1,8 @@
+{
+  "PlayerShip": {
+    "lives": 3,
+    "damage": 2,
+    "shootTimer": 1000,
+    "texture": "Asset/Mainplayer/playerDamaged.png"
+  }
+}

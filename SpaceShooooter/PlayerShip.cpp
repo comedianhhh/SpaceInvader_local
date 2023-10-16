@@ -1,7 +1,10 @@
 #include "PlayerShip.h"
 
-PlayerShip::PlayerShip(SDL_Rect initialPosition, int live,int shootTimer)
-    : position(initialPosition), lives(live),shootTimer(shootTimer) {
+PlayerShip::PlayerShip(SDL_Rect initialPosition, int live,int shootTimer,int score)
+    : position(initialPosition), lives(live),shootTimer(shootTimer),score(score) 
+{
+    damage = 2;
+    filepath = "Asset/Mainplayer/player.png";
 
 }
 
@@ -35,16 +38,12 @@ void PlayerShip::HandleInput(const Uint8* keyboardState, std::vector<Projectile*
 void PlayerShip::Update() {
 }
 
-void PlayerShip::Render(SDL_Renderer* renderer) {
+void PlayerShip::Render(SDL_Renderer* renderer) 
+{
 
-    SDL_Surface* surface = IMG_Load("Asset/Mainplayer/player.png");
-    if (!surface) {
-        // Error handling if the image cannot be loaded
-        SDL_Log("Failed to load image: %s", IMG_GetError());
-        return;
-    }
+    SDL_Surface* surface = IMG_Load(filepath.c_str());
 
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface); 
 
     SDL_RenderCopy(renderer, texture, nullptr, &position);
@@ -53,6 +52,7 @@ void PlayerShip::Render(SDL_Renderer* renderer) {
     
 
 }
+
 Projectile* PlayerShip::Shoot() {
     const int projectileXOffset = 20;
     const int projectileYOffset = -10;
@@ -60,7 +60,10 @@ Projectile* PlayerShip::Shoot() {
     return new Projectile(position.x + projectileXOffset, position.y + projectileYOffset, 1, true);
 }
 
-
+void PlayerShip::AddScore(int amount)
+{
+	score += amount;
+}
 void PlayerShip::TakeDamage() {
     lives--;
 }
@@ -77,6 +80,38 @@ SDL_Rect PlayerShip::GetPosition()const
 {
 	return position;
 }
-int PlayerShip::GetLives() const {
+int PlayerShip::GetLives() const
+{
 	return lives;
+}
+int PlayerShip::GetScore() const
+{
+	return score;
+}
+void PlayerShip::LoadData() 
+{
+    std::ifstream inputStream("PlayerShip.json");
+    std::string str((std::istreambuf_iterator<char>(inputStream)), std::istreambuf_iterator<char>());
+    json::JSON document = json::JSON::Load(str);
+    if (document.hasKey("PlayerShip"))
+    {
+        json::JSON playerShip = document["PlayerShip"];
+        if (playerShip.hasKey("lives"))
+        {
+            lives = playerShip["lives"].ToInt();
+        }
+        if (playerShip.hasKey("damage"))
+        {
+            damage = playerShip["damage"].ToInt();
+        }
+        if(playerShip.hasKey("shootTimer"))
+		{
+			shootTimer = playerShip["shootTimer"].ToInt();
+		}
+        if (playerShip.hasKey("texture")) 
+        {
+            filepath = playerShip["texture"].ToString();
+            std::cout<< filepath << std::endl;
+        }
+    }
 }

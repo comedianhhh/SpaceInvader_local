@@ -1,0 +1,7 @@
+{
+  "EnemyShip":
+  {
+    "health": 1,
+    "score": 50
+  }
+}

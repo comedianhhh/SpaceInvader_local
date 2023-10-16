@@ -80,6 +80,4 @@ void BackGround::MoveObjects() {
             cloud.x = rand() % 800;
         }
     }
-
-    // Move other objects similarly
 }
