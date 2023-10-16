@@ -18,6 +18,7 @@ public:
     void TakeDamage();
     bool IsDestroyed() const;
     void Reset();
+    int GetLives() const;
     SDL_Rect GetPosition()const;
     Projectile* Shoot();
 

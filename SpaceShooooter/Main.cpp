@@ -11,6 +11,7 @@
 #include "EnemyShip.h"
 #include "EnemyUFO.h"
 #include "BackGround.h"
+#include "GameUI.h"
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 const int MAX_ASTEROIDS = 6;
@@ -210,7 +211,12 @@ int main(int argc, char* argv[]) {
         }
         background.MoveObjects();
         background.Render();
+        // Render game UI
+        GameUI::GetInstance().Render(renderer);
 
+        GameUI::GetInstance().IncreaseScore(1);
+        GameUI::GetInstance().SetLives(playerShip->GetLives());
+        GameUI::GetInstance().Render(renderer);
 
         // Render player ship
         playerShip->Render(renderer);
@@ -232,6 +238,7 @@ int main(int argc, char* argv[]) {
 
     // Cleanup and shutdown SDL
 
+
     delete playerShip;
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
@@ -239,4 +246,5 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
 

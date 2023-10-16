@@ -77,3 +77,6 @@ SDL_Rect PlayerShip::GetPosition()const
 {
 	return position;
 }
+int PlayerShip::GetLives() const {
+	return lives;
+}
