@@ -61,6 +61,22 @@ Projectile* PlayerShip::Shoot() {
     return new Projectile(position.x + projectileXOffset, position.y + projectileYOffset, 1, true);
 }
 
+void PlayerShip::SetX(int x)
+{
+	position.x = x;
+}
+void PlayerShip::SetY(int y)
+{
+	position.y = y;
+}
+void PlayerShip::SetLives(int lives)
+{
+	this->lives = lives;
+}
+void PlayerShip::SetScore(int score)
+{
+	this->score = score;
+}
 void PlayerShip::AddScore(int amount)
 {
 	score += amount;

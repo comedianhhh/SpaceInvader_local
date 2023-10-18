@@ -1,62 +1,61 @@
 #include "GameManager.h"
-
 #include <fstream>
+#include"json.hpp"
+#include <iostream>
 
 GameManager::GameManager() {}
 
 GameManager::~GameManager() {}
 
-void GameManager::SaveGame(const GameState& state) {
+void GameManager::SaveGame(const GameState& state) 
+{
 
-	std::ofstream file("savegame.dat", std::ios::binary);
+	json::JSON document;
+	document["PlayerShip"]["lives"] = state.playerShip->GetLives();
+	document["PlayerShip"]["score"] = state.playerShip->GetScore();
+	document["PlayerShip"]["Rect"]["x"] = state.playerShip->GetPosition().x;
+	document["PlayerShip"]["Rect"]["y"] = state.playerShip->GetPosition().y;
 
-	// Save player ship
-	file.write((char*)state.playerShip, sizeof(PlayerShip));
+	//save enemies and asteroid
+	json::JSON enemies = json::JSON::Array();
 
-	// Save number of enemies
-	int numEnemies = state.enemies.size();
-	file.write((char*)&numEnemies, sizeof(int));
-
-	// Save each enemy
-	for (Enemy* enemy : state.enemies) {
-		file.write((char*)enemy, sizeof(Enemy));
-	}
-
-	// Save asteroids
-	for(Asteroid* asteroid : state.asteroids) 
+	for (int i = 0; i < state.enemies.size(); i++)
 	{
-		file.write((char*)asteroid, sizeof(Asteroid));
+		json::JSON enemy;
+		enemy["Enemy"]["Rect"]["x"] = state.enemies[i]->GetPosition().x;
+		enemy["Enemy"]["Rect"]["y"] = state.enemies[i]->GetPosition().y;
+		enemies.append(enemy);
 	}
+	
 
-	file.close();
+	std::ofstream save("save.json");
+	save<<document.dump();
+	save<<enemies.dump();
+
 
 }
 
-void GameManager::LoadGame(GameState& state) {
+void GameManager::LoadGame(GameState& state) 
+{
+	std::ifstream save("save.json");
+	std::string str((std::istreambuf_iterator<char>(save)), std::istreambuf_iterator<char>());
+	json::JSON document = json::JSON::Load(str);
 
-	std::ifstream file("savegame.dat", std::ios::binary);
-
-	// Load player ship
-	file.read((char*)&state.playerShip, sizeof(PlayerShip));
-
-	// Load number of enemies
-	int numEnemies;
-	file.read((char*)&numEnemies, sizeof(int));
-
-	// Load enemies
-	state.enemies.resize(numEnemies);
-	for (int i = 0; i < numEnemies; i++) 
+	if (document.hasKey("PlayerShip"))
 	{
-		file.read((char*)&state.enemies[i], sizeof(Enemy));
-	}
-	int numAsteroids;
-
-	state.asteroids.resize(numAsteroids);
-	for (int i = 0; i < numAsteroids; i++)
-	{
-		file.read((char*)&state.asteroids[i], sizeof(Asteroid));
-	}
-
-	file.close();
-
+		json::JSON playerShip = document["PlayerShip"];
+		if (playerShip.hasKey("lives"))
+		{
+			state.playerShip->SetLives(playerShip["lives"].ToInt());
+		}
+		if (playerShip.hasKey("score"))
+		{
+			state.playerShip->SetScore(playerShip["score"].ToInt());
+		}
+		if (playerShip.hasKey("Rect"))
+		{
+			state.playerShip->SetX(playerShip["Rect"]["x"].ToInt());
+			state.playerShip->SetY(playerShip["Rect"]["y"].ToInt());
+		}
+	}	
 }

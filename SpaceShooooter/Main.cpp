@@ -12,6 +12,7 @@
 #include "EnemyUFO.h"
 #include "BackGround.h"
 #include "GameUI.h"
+#include"GameManager.h"
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 const int MAX_ASTEROIDS = 6;
@@ -36,12 +37,19 @@ int main(int argc, char* argv[]) {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     bool quit = false;
-
-    PlayerShip* playerShip(new PlayerShip({ 100, 200, 50, 50 }, 10,0,0));
-
+    GameManager* gameManager = new GameManager();
+    GameManager::GameState state;
+    
+    PlayerShip* playerShip(new PlayerShip({ 100, 200, 50, 50 }, 10, 0, 0));
     std::vector<Asteroid*> asteroids;
     std::vector<Enemy*> enemies;
     std::vector<Projectile*> projectiles;
+    state.playerShip=playerShip;
+
+
+    const Uint8* keystate = SDL_GetKeyboardState(nullptr);// Get the state of the keyboard
+
+
 
     playerShip->LoadData();
     while (!quit) 
@@ -54,11 +62,19 @@ int main(int argc, char* argv[]) {
                     quit = true;
                 }
                 break;
-                // Handle other event types as needed
+
             }
         }
-
-
+        if (keystate[SDL_SCANCODE_GRAVE])
+        {
+            gameManager->SaveGame(state);
+        }
+        if (keystate[SDL_SCANCODE_L])
+        {
+			gameManager->LoadGame(state);
+		}
+        state.asteroids = asteroids;
+        state.enemies = enemies;
         // Randomly generate new asteroids
         if (asteroids.size() < MAX_ASTEROIDS && rand() % 100 < 5) {
             int size = rand() % 2 == 0 ? 30 : 50;
@@ -85,6 +101,7 @@ int main(int argc, char* argv[]) {
                 std::vector<Enemy*> newEnemies = EnemyFactory::CreateRandomEnemies(numUFOs, numShips, WINDOW_WIDTH, WINDOW_HEIGHT);
                 enemies.insert(enemies.end(), newEnemies.begin(), newEnemies.end());
                 spawnTimer=100;
+                
             }
         }
         else {

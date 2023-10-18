@@ -23,9 +23,14 @@ public:
     int GetLives() const;
     int GetScore() const;
     int GetDamage() const;
+    
     SDL_Rect GetPosition()const;
     Projectile* Shoot();
     void AddScore(int score);
+    void SetLives(int lives);
+    void SetScore(int score);
+    void SetX(int x);
+    void SetY(int y);
     void LoadData();
 
 private:

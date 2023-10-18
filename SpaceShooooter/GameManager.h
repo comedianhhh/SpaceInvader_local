@@ -5,7 +5,7 @@
 #include "Asteroid.h"
 class GameManager
 {
-private :
+public :
 	struct GameState
 	{
 
