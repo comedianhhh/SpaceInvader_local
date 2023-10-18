@@ -4,6 +4,7 @@ EnemyUFO::EnemyUFO(SDL_Rect position, int health, int score)
 	: position(position), health(health), score(score), destroyed(false)
 {
 	filepath = "Asset/Enemies/enemyUFO.png";
+	std::cout<<"EnemyUFO created"<<std::endl;
 }
 
 EnemyUFO::~EnemyUFO()
@@ -54,6 +55,14 @@ void EnemyUFO::Destroy()
 {
 	destroyed= true;
 }
+void EnemyUFO::SetX(int x)
+{
+	position.x = x;
+}
+void EnemyUFO::SetY(int y)
+{
+	position.y = y;
+}
 int EnemyUFO::AwardPoints() const
 {
 	return score;
@@ -81,6 +90,10 @@ int EnemyUFO::GetY() const
 int EnemyUFO::GetX() const
 {
 	return position.x;
+}
+std::string EnemyUFO::GetType() const
+{
+	return "UFO";
 }
 bool EnemyUFO::CheckCollision(const SDL_Rect& otherRect) const
 {
@@ -110,6 +123,10 @@ void EnemyUFO::LoadData()
 	}
 
 	inputStream.close();
+}
+Enemy* EnemyUFO::Clone() const
+{
+	return new EnemyUFO(*this);
 }
 
 

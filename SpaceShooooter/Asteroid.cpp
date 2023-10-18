@@ -74,3 +74,11 @@ void Asteroid::Render(SDL_Renderer* renderer) {
     SDL_DestroyTexture(texture);
 
 }
+void Asteroid::SetX(int x)
+{
+    this->x = x;
+};
+void Asteroid::SetY(int y)
+{
+	this->y = y;
+};

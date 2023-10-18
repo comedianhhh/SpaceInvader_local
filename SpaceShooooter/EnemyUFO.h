@@ -19,9 +19,12 @@ public:
     int GetScore() const override;
     int GetY() const override;
     int GetX() const override;
+    std::string GetType() const override;
+    void SetY(int y) override;
+    void SetX(int x) override;
     bool CheckCollision(const SDL_Rect& otherRect) const;
     void LoadData() override;
-
+    Enemy* Clone() const override;
 protected:
     SDL_Rect position;
     int health;

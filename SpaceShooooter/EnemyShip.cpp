@@ -4,8 +4,10 @@
 EnemyShip::EnemyShip(SDL_Rect position, int health, int score)
     : position(position), health(health), score(score), destroyed(false)
 {
+    shootTimer = 600;
     timer = shootTimer;
     filepath= "Asset/Enemies/enemyShip.png";
+    std::cout<<"EnemyShip created"<<std::endl;
 }
 
 EnemyShip::~EnemyShip() {}
@@ -77,9 +79,22 @@ int EnemyShip::GetY() const {
 int EnemyShip::GetX() const {
 	return position.x;
 }
+std::string EnemyShip::GetType() const {
+    return "Ship";
+}
 bool EnemyShip::CheckCollision(const SDL_Rect& otherRect) const {
 	return SDL_HasIntersection(&position, &otherRect);
 }
+
+void EnemyShip::SetX(int x) 
+{
+    this->position.x = x;
+}
+void EnemyShip::SetY(int y) 
+{
+	this->position.y = y;
+}
+
 void EnemyShip::LoadData() 
 {
     std::ifstream inputStream("EnemyShip.json");
@@ -105,4 +120,8 @@ void EnemyShip::LoadData()
             filepath= enemyShip["texture"].ToString();
         }
 	}
+}
+Enemy* EnemyShip::Clone() const
+{
+	return new EnemyShip(*this);
 }

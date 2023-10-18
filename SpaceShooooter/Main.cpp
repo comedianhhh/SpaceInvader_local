@@ -46,6 +46,7 @@ int main(int argc, char* argv[]) {
     std::vector<Projectile*> projectiles;
     state.playerShip=playerShip;
 
+    
 
     const Uint8* keystate = SDL_GetKeyboardState(nullptr);// Get the state of the keyboard
 
@@ -71,10 +72,17 @@ int main(int argc, char* argv[]) {
         }
         if (keystate[SDL_SCANCODE_L])
         {
+            gameManager->ClearEnemies(enemies);
+
+            for (auto& e : state.enemies) {
+                enemies.push_back(e->Clone());
+            }
 			gameManager->LoadGame(state);
+
 		}
-        state.asteroids = asteroids;
-        state.enemies = enemies;
+
+
+ 
         // Randomly generate new asteroids
         if (asteroids.size() < MAX_ASTEROIDS && rand() % 100 < 5) {
             int size = rand() % 2 == 0 ? 30 : 50;
@@ -90,6 +98,7 @@ int main(int argc, char* argv[]) {
             }
             if (!overlap) {
                 asteroids.push_back(new Asteroid(x, y, size));
+                state.asteroids.push_back(new Asteroid(x, y, size));
             }
         }
 
@@ -100,6 +109,7 @@ int main(int argc, char* argv[]) {
                 int numShips = rand() % 2 == 0 ? 1 : 3;
                 std::vector<Enemy*> newEnemies = EnemyFactory::CreateRandomEnemies(numUFOs, numShips, WINDOW_WIDTH, WINDOW_HEIGHT);
                 enemies.insert(enemies.end(), newEnemies.begin(), newEnemies.end());
+                state.enemies.insert(state.enemies.end(), newEnemies.begin(), newEnemies.end());
                 spawnTimer=100;
                 
             }
@@ -144,10 +154,7 @@ int main(int argc, char* argv[]) {
             {
                 ship->Shoot(projectiles);
             }
-            else if (auto* ufo = dynamic_cast<EnemyUFO*>(enemy))
-            {
 
-            }
         }
         for (auto& projectile : projectiles)
         {
@@ -193,6 +200,18 @@ int main(int argc, char* argv[]) {
                 isDestroyed;
             }), 
             asteroids.end());
+        state.asteroids.erase(std::remove_if(state.asteroids.begin(), state.asteroids.end(), [](Asteroid* asteroid)
+			{
+				bool isDestroyed = asteroid->IsDestroyed();
+				if (isDestroyed)
+				{
+					delete asteroid;
+					asteroid = nullptr;
+				}
+				return
+					isDestroyed;
+			}),
+			state.asteroids.end());
 
         // Erase destroyed enemies and deallocate memory
         enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](Enemy* enemy)

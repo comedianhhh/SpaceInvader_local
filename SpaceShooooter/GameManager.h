@@ -3,6 +3,9 @@
 #include "Enemy.h"
 #include "PlayerShip.h"
 #include "Asteroid.h"
+#include "EnemyFactory.h"
+#include"EnemyShip.h"
+#include"EnemyUFO.h"
 class GameManager
 {
 public :
@@ -20,6 +23,6 @@ public :
 	~GameManager();
 	void SaveGame(const GameState& state);
 	void LoadGame(GameState& state);
-
+	void ClearEnemies(std::vector<Enemy*>& enemies);
 };
 

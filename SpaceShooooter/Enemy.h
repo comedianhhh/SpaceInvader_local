@@ -22,8 +22,13 @@ public :
 	virtual int GetScore() const = 0;
 	virtual int GetY() const = 0;
 	virtual int GetX() const = 0;
+	virtual std::string GetType() const = 0;
+	virtual void SetY(int y) = 0;
+	virtual void SetX(int x) = 0;
 	virtual bool CheckCollision(const SDL_Rect& otherRect) const = 0;
 	virtual void LoadData() = 0;
+	virtual Enemy* Clone() const = 0;
+	
 
 };
 

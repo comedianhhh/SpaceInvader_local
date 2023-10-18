@@ -7,7 +7,7 @@ GameManager::GameManager() {}
 
 GameManager::~GameManager() {}
 
-void GameManager::SaveGame(const GameState& state) 
+void GameManager::SaveGame(const GameState& state)
 {
 
 	json::JSON document;
@@ -16,26 +16,32 @@ void GameManager::SaveGame(const GameState& state)
 	document["PlayerShip"]["Rect"]["x"] = state.playerShip->GetPosition().x;
 	document["PlayerShip"]["Rect"]["y"] = state.playerShip->GetPosition().y;
 
+	json::JSON asteroids = json::JSON::Array();
+	for (int i = 0; i < state.asteroids.size();i++)
+	{
+		json::JSON asteroid;
+		asteroid["Asteroid"]["Rect"]["x"] = state.asteroids[i]->GetX();
+		asteroid["Asteroid"]["Rect"]["y"] = state.asteroids[i]->GetY();
+		asteroids.append(asteroid);
+	}
 	//save enemies and asteroid
+	document["Asteroids"] = asteroids;
 	json::JSON enemies = json::JSON::Array();
 
 	for (int i = 0; i < state.enemies.size(); i++)
 	{
 		json::JSON enemy;
+		enemy["Enemy"]["Type"] = state.enemies[i]->GetType();
 		enemy["Enemy"]["Rect"]["x"] = state.enemies[i]->GetPosition().x;
 		enemy["Enemy"]["Rect"]["y"] = state.enemies[i]->GetPosition().y;
 		enemies.append(enemy);
 	}
-	
-
+	document["Enemies"] = enemies;
 	std::ofstream save("save.json");
-	save<<document.dump();
-	save<<enemies.dump();
-
-
+	save << document.dump();
 }
 
-void GameManager::LoadGame(GameState& state) 
+void GameManager::LoadGame(GameState& state)
 {
 	std::ifstream save("save.json");
 	std::string str((std::istreambuf_iterator<char>(save)), std::istreambuf_iterator<char>());
@@ -57,5 +63,59 @@ void GameManager::LoadGame(GameState& state)
 			state.playerShip->SetX(playerShip["Rect"]["x"].ToInt());
 			state.playerShip->SetY(playerShip["Rect"]["y"].ToInt());
 		}
-	}	
+	}
+	if (document.hasKey("Enemies"))
+	{
+		for (auto& enemy : state.enemies)
+		{
+			delete enemy;
+			enemy = nullptr;
+		}
+		state.enemies.clear();
+		for (auto& enemy : document["Enemies"].ArrayRange())
+		{
+			if (enemy["Enemy"].hasKey("Type") && enemy["Enemy"]["Type"].ToString() == "Ship")
+			{
+				EnemyShip* newE = new EnemyShip({ 0, 0, 50, 50 }, 5, 10);
+				newE->SetX(enemy["Enemy"]["Rect"]["x"].ToInt());
+				newE->SetY(enemy["Enemy"]["Rect"]["y"].ToInt());
+				state.enemies.push_back(newE);
+			}
+			else if (enemy["Enemy"].hasKey("Type") && enemy["Enmey"]["Type"].ToString() == "UFO")
+			{
+				EnemyUFO* newU = new EnemyUFO({ 0, 0, 50, 50 }, 3, 10);
+				newU->SetX(enemy["Enemy"]["Rect"]["x"].ToInt());
+				newU->SetY(enemy["Enemy"]["Rect"]["y"].ToInt());
+				state.enemies.push_back(newU);
+			}
+
+		}
+
+	}
+	if (document.hasKey("Asteroids"))
+	{
+		for (auto& asteroid : state.asteroids)
+		{
+			delete asteroid;
+			asteroid = nullptr;
+		}
+		state.asteroids.clear();
+		for (auto& asteroid : document["Asteroids"].ArrayRange())
+		{
+			Asteroid* newA = new Asteroid( 0,0, 30);
+			newA->SetX(asteroid["Asteroid"]["Rect"]["x"].ToInt());
+			newA->SetY(asteroid["Asteroid"]["Rect"]["y"].ToInt());
+			state.asteroids.push_back(newA);
+		}
+	}
+	
+}
+void GameManager::ClearEnemies(std::vector<Enemy*>& enemies)
+{
+ 	for(auto& enemy : enemies)
+	{
+		delete enemy;
+		enemy = nullptr;
+	}
+	enemies.clear();
 }

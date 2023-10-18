@@ -1,31 +1,102 @@
 {
+  "Asteroids" : [{
+      "Asteroid" : {
+        "Rect" : {
+          "x" : 126,
+          "y" : 547
+        }
+      }
+    }, {
+      "Asteroid" : {
+        "Rect" : {
+          "x" : 112,
+          "y" : 377
+        }
+      }
+    }, {
+      "Asteroid" : {
+        "Rect" : {
+          "x" : 741,
+          "y" : -188
+        }
+      }
+    }, {
+      "Asteroid" : {
+        "Rect" : {
+          "x" : 67,
+          "y" : 50
+        }
+      }
+    }, {
+      "Asteroid" : {
+        "Rect" : {
+          "x" : 112,
+          "y" : 62
+        }
+      }
+    }, {
+      "Asteroid" : {
+        "Rect" : {
+          "x" : 239,
+          "y" : -291
+        }
+      }
+    }],
+  "Enemies" : [{
+      "Enemy" : {
+        "Rect" : {
+          "x" : 151,
+          "y" : 84
+        },
+        "Type" : "UFO"
+      }
+    }, {
+      "Enemy" : {
+        "Rect" : {
+          "x" : 330,
+          "y" : 131
+        },
+        "Type" : "UFO"
+      }
+    }, {
+      "Enemy" : {
+        "Rect" : {
+          "x" : 634,
+          "y" : 109
+        },
+        "Type" : "UFO"
+      }
+    }, {
+      "Enemy" : {
+        "Rect" : {
+          "x" : 799,
+          "y" : 100
+        },
+        "Type" : "Ship"
+      }
+    }, {
+      "Enemy" : {
+        "Rect" : {
+          "x" : 602,
+          "y" : 100
+        },
+        "Type" : "Ship"
+      }
+    }, {
+      "Enemy" : {
+        "Rect" : {
+          "x" : 293,
+          "y" : 100
+        },
+        "Type" : "Ship"
+      }
+    }],
   "PlayerShip" : {
     "Rect" : {
-      "x" : 254,
-      "y" : 351
+      "x" : 332,
+      "y" : 307
     },
     "lives" : 3,
-    "score" : 270
+    "score" : 35
   }
-}[{
-    "Enemy" : {
-      "Rect" : {
-        "x" : 650,
-        "y" : 482
-      }
-    }
-  }, {
-    "Enemy" : {
-      "Rect" : {
-        "x" : 316,
-        "y" : 100
-      }
-    }
-  }, {
-    "Enemy" : {
-      "Rect" : {
-        "x" : 701,
-        "y" : 100
-      }
-    }
-  }]
+}

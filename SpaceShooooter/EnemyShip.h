@@ -20,10 +20,13 @@ public:
     int GetScore() const override;
     int GetY() const override;
     int GetX() const override;
+    std::string GetType() const override;
     bool CheckCollision(const SDL_Rect& otherRect) const;
     void Shoot(std::vector<Projectile*>& projectiles);
- 
+    void SetX(int x) override;
+    void SetY(int y) override;
     void LoadData() override;
+    Enemy* Clone() const override;
 protected:
     SDL_Rect position;
     int shootTimer;

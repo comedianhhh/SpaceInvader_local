@@ -18,7 +18,8 @@ public:
     SDL_Rect GetPosition() const;
     int GetSize() const;
     bool IsDestroyed() const;
-
+    void SetX(int x);
+    void SetY(int y);   
     void Update();
     void Destroy();
     bool CheckCollision(const SDL_Rect& otherRect) const;
