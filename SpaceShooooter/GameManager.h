@@ -24,5 +24,6 @@ public :
 	void SaveGame(const GameState& state);
 	void LoadGame(GameState& state);
 	void ClearEnemies(std::vector<Enemy*>& enemies);
+	void ClearAsteroids(std::vector<Asteroid*>& asteroids);
 };
 

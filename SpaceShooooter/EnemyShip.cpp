@@ -7,7 +7,7 @@ EnemyShip::EnemyShip(SDL_Rect position, int health, int score)
     shootTimer = 600;
     timer = shootTimer;
     filepath= "Asset/Enemies/enemyShip.png";
-    std::cout<<"EnemyShip created"<<std::endl;
+
 }
 
 EnemyShip::~EnemyShip() {}

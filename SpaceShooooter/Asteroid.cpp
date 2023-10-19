@@ -30,6 +30,7 @@ void Asteroid::Update() {
         y += 1;
         rect.y = y;
     }
+    rect.x = x;
 }
 
 void Asteroid::Destroy() {
@@ -82,3 +83,12 @@ void Asteroid::SetY(int y)
 {
 	this->y = y;
 };
+void Asteroid::SetSize(int size)
+{
+	this->rect.w = size;
+    this->rect.h = size;
+};
+Asteroid* Asteroid::Clone() const
+{
+	return new Asteroid(*this);
+}

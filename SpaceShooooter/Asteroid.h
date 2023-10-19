@@ -20,11 +20,13 @@ public:
     bool IsDestroyed() const;
     void SetX(int x);
     void SetY(int y);   
+    void SetSize(int size);
     void Update();
     void Destroy();
     bool CheckCollision(const SDL_Rect& otherRect) const;
     int AwardPoints() const;
     void Render(SDL_Renderer* renderer);
+    Asteroid* Clone() const;
 };
 
 #endif // ASTEROID_H

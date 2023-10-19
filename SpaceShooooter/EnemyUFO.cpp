@@ -4,7 +4,6 @@ EnemyUFO::EnemyUFO(SDL_Rect position, int health, int score)
 	: position(position), health(health), score(score), destroyed(false)
 {
 	filepath = "Asset/Enemies/enemyUFO.png";
-	std::cout<<"EnemyUFO created"<<std::endl;
 }
 
 EnemyUFO::~EnemyUFO()

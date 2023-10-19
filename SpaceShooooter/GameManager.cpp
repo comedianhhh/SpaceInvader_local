@@ -22,6 +22,7 @@ void GameManager::SaveGame(const GameState& state)
 		json::JSON asteroid;
 		asteroid["Asteroid"]["Rect"]["x"] = state.asteroids[i]->GetX();
 		asteroid["Asteroid"]["Rect"]["y"] = state.asteroids[i]->GetY();
+		asteroid["Asteroid"]["Size"] = state.asteroids[i]->GetSize();
 		asteroids.append(asteroid);
 	}
 	//save enemies and asteroid
@@ -50,6 +51,7 @@ void GameManager::LoadGame(GameState& state)
 	if (document.hasKey("PlayerShip"))
 	{
 		json::JSON playerShip = document["PlayerShip"];
+		
 		if (playerShip.hasKey("lives"))
 		{
 			state.playerShip->SetLives(playerShip["lives"].ToInt());
@@ -66,45 +68,39 @@ void GameManager::LoadGame(GameState& state)
 	}
 	if (document.hasKey("Enemies"))
 	{
-		for (auto& enemy : state.enemies)
-		{
-			delete enemy;
-			enemy = nullptr;
-		}
 		state.enemies.clear();
 		for (auto& enemy : document["Enemies"].ArrayRange())
 		{
 			if (enemy["Enemy"].hasKey("Type") && enemy["Enemy"]["Type"].ToString() == "Ship")
 			{
 				EnemyShip* newE = new EnemyShip({ 0, 0, 50, 50 }, 5, 10);
+				newE->LoadData();
 				newE->SetX(enemy["Enemy"]["Rect"]["x"].ToInt());
 				newE->SetY(enemy["Enemy"]["Rect"]["y"].ToInt());
 				state.enemies.push_back(newE);
 			}
-			else if (enemy["Enemy"].hasKey("Type") && enemy["Enmey"]["Type"].ToString() == "UFO")
+			else if (enemy["Enemy"].hasKey("Type") && enemy["Enemy"]["Type"].ToString() == "UFO")
 			{
 				EnemyUFO* newU = new EnemyUFO({ 0, 0, 50, 50 }, 3, 10);
+				newU->LoadData();
 				newU->SetX(enemy["Enemy"]["Rect"]["x"].ToInt());
 				newU->SetY(enemy["Enemy"]["Rect"]["y"].ToInt());
 				state.enemies.push_back(newU);
 			}
-
 		}
+
 
 	}
 	if (document.hasKey("Asteroids"))
 	{
-		for (auto& asteroid : state.asteroids)
-		{
-			delete asteroid;
-			asteroid = nullptr;
-		}
+	
 		state.asteroids.clear();
 		for (auto& asteroid : document["Asteroids"].ArrayRange())
 		{
 			Asteroid* newA = new Asteroid( 0,0, 30);
 			newA->SetX(asteroid["Asteroid"]["Rect"]["x"].ToInt());
 			newA->SetY(asteroid["Asteroid"]["Rect"]["y"].ToInt());
+			newA->SetSize(asteroid["Asteroid"]["Size"].ToInt());
 			state.asteroids.push_back(newA);
 		}
 	}
@@ -118,4 +114,13 @@ void GameManager::ClearEnemies(std::vector<Enemy*>& enemies)
 		enemy = nullptr;
 	}
 	enemies.clear();
+}
+void GameManager::ClearAsteroids(std::vector<Asteroid*>& asteroids)
+{
+	for (auto& asteroid : asteroids)
+	{
+		delete asteroid;
+		asteroid = nullptr;
+	}
+	asteroids.clear();
 }

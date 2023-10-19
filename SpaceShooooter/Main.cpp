@@ -73,11 +73,15 @@ int main(int argc, char* argv[]) {
         if (keystate[SDL_SCANCODE_L])
         {
             gameManager->ClearEnemies(enemies);
+            gameManager->ClearAsteroids(asteroids);
 
+			gameManager->LoadGame(state);
             for (auto& e : state.enemies) {
                 enemies.push_back(e->Clone());
             }
-			gameManager->LoadGame(state);
+            for (auto& a : state.asteroids) {
+				asteroids.push_back(a->Clone());
+			}
 
 		}
 
@@ -117,7 +121,8 @@ int main(int argc, char* argv[]) {
         else {
             spawnTimer--;
         }
-
+        state.enemies=enemies;
+        state.asteroids=asteroids;
         // Update asteroids
         for (auto& asteroid : asteroids) {
             asteroid->Update();
@@ -194,39 +199,28 @@ int main(int argc, char* argv[]) {
             if (isDestroyed) 
             {
                 delete asteroid;
-                asteroid = nullptr;
+                
             }
             return 
                 isDestroyed;
             }), 
             asteroids.end());
-        state.asteroids.erase(std::remove_if(state.asteroids.begin(), state.asteroids.end(), [](Asteroid* asteroid)
-			{
-				bool isDestroyed = asteroid->IsDestroyed();
-				if (isDestroyed)
-				{
-					delete asteroid;
-					asteroid = nullptr;
-				}
-				return
-					isDestroyed;
-			}),
-			state.asteroids.end());
 
         // Erase destroyed enemies and deallocate memory
+
         enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](Enemy* enemy)
             {
 			bool isDestroyed = enemy->IsDestroyed();
             if (isDestroyed)
             {
 				delete enemy;
-                enemy=nullptr;
+                
 			}
 			return
 				isDestroyed;
+
 			}),
             enemies.end());
-
         // Erase destroyed projectiles and deallocate memory
         projectiles.erase(std::remove_if(projectiles.begin(), projectiles.end(), [](Projectile* projectile)
             {
@@ -234,7 +228,6 @@ int main(int argc, char* argv[]) {
                 if (isDestroyed)
                 {
                     delete projectile;
-                    projectile = nullptr;
                 }
                 return isDestroyed;
             }),
