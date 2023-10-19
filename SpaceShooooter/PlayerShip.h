@@ -23,6 +23,7 @@ public:
     int GetLives() const;
     int GetScore() const;
     int GetDamage() const;
+    int GetHighScore() const;
     
     SDL_Rect GetPosition()const;
     Projectile* Shoot();
@@ -40,6 +41,7 @@ private:
     int lives;
     int shootTimer;
     int score;
+    int highscore;
     int timer;
     std::string filepath;
     SDL_Texture* texture;

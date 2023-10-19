@@ -2,48 +2,48 @@
   "Asteroids" : [{
       "Asteroid" : {
         "Rect" : {
-          "x" : 431,
-          "y" : 35
-        },
-        "Size" : 50
-      }
-    }, {
-      "Asteroid" : {
-        "Rect" : {
-          "x" : 410,
-          "y" : 375
+          "x" : 579,
+          "y" : 459
         },
         "Size" : 30
       }
     }, {
       "Asteroid" : {
         "Rect" : {
-          "x" : 687,
-          "y" : 396
+          "x" : 2,
+          "y" : 519
         },
         "Size" : 30
       }
     }, {
       "Asteroid" : {
         "Rect" : {
-          "x" : 254,
-          "y" : 162
+          "x" : 430,
+          "y" : -71
         },
         "Size" : 30
       }
     }, {
       "Asteroid" : {
         "Rect" : {
-          "x" : 470,
-          "y" : 40
+          "x" : 392,
+          "y" : 63
         },
         "Size" : 30
       }
     }, {
       "Asteroid" : {
         "Rect" : {
-          "x" : 62,
-          "y" : -328
+          "x" : 100,
+          "y" : 158
+        },
+        "Size" : 30
+      }
+    }, {
+      "Asteroid" : {
+        "Rect" : {
+          "x" : 280,
+          "y" : -391
         },
         "Size" : 30
       }
@@ -51,15 +51,31 @@
   "Enemies" : [{
       "Enemy" : {
         "Rect" : {
-          "x" : 549,
-          "y" : 274
+          "x" : 176,
+          "y" : 279
         },
         "Type" : "UFO"
       }
     }, {
       "Enemy" : {
         "Rect" : {
-          "x" : 767,
+          "x" : 360,
+          "y" : 232
+        },
+        "Type" : "UFO"
+      }
+    }, {
+      "Enemy" : {
+        "Rect" : {
+          "x" : 738,
+          "y" : 289
+        },
+        "Type" : "UFO"
+      }
+    }, {
+      "Enemy" : {
+        "Rect" : {
+          "x" : 624,
           "y" : 100
         },
         "Type" : "Ship"
@@ -67,31 +83,7 @@
     }, {
       "Enemy" : {
         "Rect" : {
-          "x" : 444,
-          "y" : 163
-        },
-        "Type" : "UFO"
-      }
-    }, {
-      "Enemy" : {
-        "Rect" : {
-          "x" : 568,
-          "y" : 185
-        },
-        "Type" : "UFO"
-      }
-    }, {
-      "Enemy" : {
-        "Rect" : {
-          "x" : 392,
-          "y" : 170
-        },
-        "Type" : "UFO"
-      }
-    }, {
-      "Enemy" : {
-        "Rect" : {
-          "x" : 113,
+          "x" : 385,
           "y" : 100
         },
         "Type" : "Ship"
@@ -99,15 +91,7 @@
     }, {
       "Enemy" : {
         "Rect" : {
-          "x" : 452,
-          "y" : 100
-        },
-        "Type" : "Ship"
-      }
-    }, {
-      "Enemy" : {
-        "Rect" : {
-          "x" : 297,
+          "x" : 78,
           "y" : 100
         },
         "Type" : "Ship"
@@ -115,10 +99,10 @@
     }],
   "PlayerShip" : {
     "Rect" : {
-      "x" : 212,
-      "y" : 424
+      "x" : 250,
+      "y" : 425
     },
     "lives" : 3,
-    "score" : 5
+    "score" : 30
   }
 }

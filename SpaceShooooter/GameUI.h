@@ -27,6 +27,7 @@ public:
 	}
 	void SetLives(int lives);
 	void SetScore(int score);
+	void SetHigh(int highscore);
 	void Render(SDL_Renderer* renderer);
 	void RenderText(SDL_Renderer* renderer, TTF_Font* font, const std::string& text, int x, int y);
 
@@ -36,6 +37,7 @@ private:
 
 	int lives=3;
 	int score=0;
+	int highscore=0;
 	SDL_Rect position = { 700,20,20,20 };
 
 

@@ -66,6 +66,10 @@ int main(int argc, char* argv[]) {
 
             }
         }
+        if (keystate[SDL_SCANCODE_ESCAPE])
+        {
+			quit = true;
+		}
         if (keystate[SDL_SCANCODE_GRAVE])
         {
             gameManager->SaveGame(state);
@@ -123,7 +127,7 @@ int main(int argc, char* argv[]) {
         }
         state.enemies=enemies;
         state.asteroids=asteroids;
-        // Update asteroids
+        // Update GameObjects
         for (auto& asteroid : asteroids) {
             asteroid->Update();
             if (asteroid->CheckCollision(playerShip->GetPosition())) {
@@ -241,11 +245,10 @@ int main(int argc, char* argv[]) {
 
         // Check for conditions to stop the game loop
         if (playerShip->IsDestroyed()) {
-            quit = true;
+            playerShip->Reset();
         }
 
-        // Clear the screen
- 
+        
         SDL_RenderClear(renderer);
         if (rand() % 100 < 5) {
             background.AddStar();
@@ -260,9 +263,10 @@ int main(int argc, char* argv[]) {
         
         GameUI::GetInstance().SetLives(playerShip->GetLives());
         GameUI::GetInstance().SetScore(playerShip->GetScore());
+        GameUI::GetInstance().SetHigh(playerShip->GetHighScore());
         GameUI::GetInstance().Render(renderer);
 
-        // Render player ship
+        // Render gameobject
         
         playerShip->Render(renderer);
         for (const auto& asteroid : asteroids) {
@@ -277,12 +281,11 @@ int main(int argc, char* argv[]) {
 			projectile->Render(renderer);
 		}
 
-        // Update the screen with the rendered content
         SDL_RenderPresent(renderer);
     }
 
     // Cleanup and shutdown SDL
-
+    delete gameManager;
     delete playerShip;
     TTF_Quit();
     SDL_Quit();

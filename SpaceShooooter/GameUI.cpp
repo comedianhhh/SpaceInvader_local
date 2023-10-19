@@ -10,12 +10,18 @@ void GameUI::SetScore(int score)
 {
 	this->score = score;
 }
+void GameUI::SetHigh(int highscore)
+{
+	this->highscore = highscore;
+}
+
 
 void GameUI::Render(SDL_Renderer* renderer)
 {
 	TTF_Font* font = TTF_OpenFont("Asset/Hud/courbi.ttf", 24);
-	RenderText(renderer, font, "Score: " + std::to_string(score), 20, 40);
+	RenderText(renderer, font, "   Score  : " + std::to_string(score), 20, 40);
 	RenderText(renderer, font,"Lives:"+std::to_string(lives), 600, 20);
+	RenderText(renderer, font, "Highscore: " + std::to_string(highscore), 20, 60);
 
 	SDL_Surface* surface = IMG_Load("Asset/Hud/life.png");
 
@@ -37,7 +43,7 @@ void GameUI::RenderText(SDL_Renderer* renderer, TTF_Font* font, const std::strin
 
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-	SDL_Rect destRect = { x, y, 70,30};
+	SDL_Rect destRect = { x, y, 100,30};
 	SDL_FreeSurface(surface);
 	SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 	SDL_DestroyTexture(texture);

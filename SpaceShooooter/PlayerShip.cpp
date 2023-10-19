@@ -76,10 +76,15 @@ void PlayerShip::SetLives(int lives)
 void PlayerShip::SetScore(int score)
 {
 	this->score = score;
+
 }
 void PlayerShip::AddScore(int amount)
 {
 	score += amount;
+    if (score > highscore)
+    {
+        highscore = score;
+    }
 }
 void PlayerShip::TakeDamage() {
     lives--;
@@ -92,6 +97,9 @@ bool PlayerShip::IsDestroyed() const {
 
 void PlayerShip::Reset() {
     lives = 3;
+    score= 0;
+    position.x= 400;
+    position.y= 400;
 }
 SDL_Rect PlayerShip::GetPosition()const
 {
@@ -108,6 +116,11 @@ int PlayerShip::GetScore() const
 int PlayerShip::GetDamage() const
 {
 	return damage;
+}
+
+int PlayerShip::GetHighScore() const
+{
+	return highscore;
 }
 void PlayerShip::LoadData() 
 {
